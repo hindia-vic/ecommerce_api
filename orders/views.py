@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics,status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticatedOrReadOnly
 from . models import Orders
 
 
@@ -13,7 +13,7 @@ User=get_user_model()
 class OrderCreation(generics.GenericAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrderSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticatedOrReadOnly]
 
 
     def get(self, request, *args, **kwargs):
@@ -36,7 +36,7 @@ class OrderCreation(generics.GenericAPIView):
 
 class OrderDetail(generics.GenericAPIView):
     serializer_class=OrderDetailSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticatedOrReadOnly]
     def get(self,request,order_id):
         order=get_object_or_404(Orders,pk=order_id)
         serializer=self.serializer_class(instance=order)

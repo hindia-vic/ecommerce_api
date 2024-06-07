@@ -15,16 +15,20 @@ class UserCreationSerializer(serializers.ModelSerializer):
         fields=['id','username', 'email', 'phone_number','password']
 
      def validate(self,attrs):
-        email=User.objects.filter(username=attrs.get('username')).exists()
+        email_exists=User.objects.filter(username=attrs.get('email')).exists()
 
-        if email:
+        if email_exists:
             raise ValidationError(detail="User with email exists",code=status.HTTP_403_FORBIDDEN)
 
-        username=User.objects.filter(username=attrs.get('username')).exists()
+        username_exists=User.objects.filter(username=attrs.get('username')).exists()
 
-        if username:
+        if username_exists:
             raise ValidationError(detail="User with username exists",code=status.HTTP_403_FORBIDDEN)
 
+        phonenumber_exists=User.objects.filter(username=attrs.get('phone_number')).exists()
+
+        if phonenumber_exists:
+            raise ValidationError(detail="User with phonenumber",code=status.HTTP_403_FORBIDDEN)
         return super().validate(attrs)
 
      def create(self,validated_data):
